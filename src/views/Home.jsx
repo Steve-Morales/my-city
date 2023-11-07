@@ -54,8 +54,6 @@ export default function Home() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const clearStates = () => {
-        console.log("Setting Spinner to True");
-        setShowSpinner(true);
         setNames([]);
         setCodes([]);
         setCurrencies([]);
@@ -65,6 +63,57 @@ export default function Home() {
         setSubregions([]);
         setTranslations([]);
     }
+
+    useEffect(()=>{
+        onStateLoad();
+    }, [names, codes, currencies, languages, capitals, regions, subregions, translations]);
+
+    // when a variable state loads, it does a series of logical steps
+    const onStateLoad = () =>{
+        switch (radioValue) {
+            case SearchEnum.NAME:
+                setShowSpinner(!(names.length > 0));
+                break;
+
+            case SearchEnum.CODE:
+                setShowSpinner(!(codes.length > 0));
+                break;
+
+            case SearchEnum.CURRENCY:
+                setShowSpinner(!(currencies.length > 0));
+                break;
+
+            case SearchEnum.LANGUAGE:
+                setShowSpinner(!(languages.length > 0));
+
+                break;
+
+            case SearchEnum.CAPITAL_CITY:
+                setShowSpinner(!(capitals.length > 0));
+
+                break;
+
+            case SearchEnum.REGION:
+                setShowSpinner(!(regions.length > 0));
+                break;
+
+            case SearchEnum.SUBREGIONS:
+                setShowSpinner(!(subregions.length > 0));
+
+                break;
+
+            case SearchEnum.TRANSLATION:
+                setShowSpinner(!(translations.length > 0));
+
+                break;
+
+            default:
+                setShowSpinner(true);
+                break;
+        }
+    }
+
+    useEffect(()=>{console.log("ShowSpinner:", showSpinner)}, [showSpinner])
 
     const onSearch = (searchTerm) => {
         clearStates();
@@ -180,8 +229,6 @@ export default function Home() {
                     setRadioValue(SearchEnum.NAME);
                 }
         }
-        console.log("Setting Back to False")
-        setShowSpinner(false);
     }
 
     const handleSearch = (event) => {
@@ -451,7 +498,7 @@ export default function Home() {
                     )
                 }
 
-                {showSpinner && <Spinner animation="grow" variant="primary" />}
+                {showSpinner==true && <Spinner animation="grow" variant="primary" />}
 
             </Row>
         </Container>
