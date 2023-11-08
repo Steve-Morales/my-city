@@ -197,8 +197,26 @@ class GetAPI {
                 name: country.name.common,
                 region: country.region
             }));
+            console.log("Loading Region Data...");
+
+            // Key-Value pairs -> region: [country1, country2, ..., countryN]
+            const organizedData = {};
+
+            for (const country of countries) {
+              const { name, region } = country;
+          
+              if (!organizedData[region]) { // if region not a key yet
+                organizedData[region] = [];
+              }
+          
+              organizedData[region].push(name);
+            }
+          
+            // return organizedData;
+            console.log("Sending Region Data...");
+            console.log(organizedData);
             if (setVar)
-                setVar(countries);
+                setVar(organizedData);
         })
         .catch(e => console.log(e));
     }
@@ -211,8 +229,26 @@ class GetAPI {
                 name: country.name.common,
                 region: country.region
             }));
+            console.log("Loading Region Data...");
+
+            // Key-Value pairs -> region: [country1, country2, ..., countryN]
+            const organizedData = {};
+
+            for (const country of countries) {
+              const { name, region } = country;
+          
+              if (!organizedData[region]) { // if region not a key yet
+                organizedData[region] = [];
+              }
+          
+              organizedData[region].push(name);
+            }
+          
+            // return organizedData;
+            console.log("Sending Region Data...");
+            console.log(organizedData);
             if (setVar)
-                setVar(countries);
+                setVar(organizedData);
         })
         .catch(e => console.log(e));
     }
@@ -225,8 +261,26 @@ class GetAPI {
                 name: country.name.common,
                 subregion: country.subregion
             }));
+            console.log("Loading SubRegion Data...");
+
+            // Key-Value pairs -> subregion: [country1, country2, ..., countryN]
+            const organizedData = {};
+
+            for (const country of countries) {
+              const { name, subregion } = country;
+          
+              if (!organizedData[subregion]) { // if region not a key yet
+                organizedData[subregion] = [];
+              }
+          
+              organizedData[subregion].push(name);
+            }
+          
+            // return organizedData;
+            console.log("Sending SubRegion Data...");
+            console.log(organizedData);
             if (setVar)
-                setVar(countries);
+                setVar(organizedData);
         })
         .catch(e => console.log(e));
     }
@@ -239,8 +293,26 @@ class GetAPI {
                 name: country.name.common,
                 subregion: country.subregion
             }));
+            console.log("Loading SubRegion Data...");
+
+            // Key-Value pairs -> subregion: [country1, country2, ..., countryN]
+            const organizedData = {};
+
+            for (const country of countries) {
+              const { name, subregion } = country;
+          
+              if (!organizedData[subregion]) { // if region not a key yet
+                organizedData[subregion] = [];
+              }
+          
+              organizedData[subregion].push(name);
+            }
+          
+            // return organizedData;
+            console.log("Sending SubRegion Data...");
+            console.log(organizedData);
             if (setVar)
-                setVar(countries);
+                setVar(organizedData);
         })
         .catch(e => console.log(e));
     }

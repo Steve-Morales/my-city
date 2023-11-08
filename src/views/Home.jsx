@@ -5,6 +5,15 @@ import GetAPI from "../utils/apiGet";
 import { useNavigate } from "react-router-dom";
 
 import '../index.css';
+import SearchBar from "../components/SearchBar";
+import CountryNameCard from "../components/CountryNameCard";
+import CountryCodeCard from "../components/CountryCodeCard";
+import CountryCurrencyCard from "../components/CountryCurrencyCard";
+import CountryLanguageCard from "../components/CountryLanguageCard";
+import CountryCapitalCard from "../components/CountryCapitalCard";
+import CountryRegionCard from "../components/CountryRegionCard";
+import CountrySubregionCard from "../components/CountrySubregionCard";
+import CountryTranslationCard from "../components/CountryTranslationCard";
 
 const SearchEnum =
 {
@@ -64,12 +73,12 @@ export default function Home() {
         setTranslations([]);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         onStateLoad();
     }, [names, codes, currencies, languages, capitals, regions, subregions, translations]);
 
     // when a variable state loads, it does a series of logical steps
-    const onStateLoad = () =>{
+    const onStateLoad = () => {
         switch (radioValue) {
             case SearchEnum.NAME:
                 setShowSpinner(!(names.length > 0));
@@ -94,11 +103,11 @@ export default function Home() {
                 break;
 
             case SearchEnum.REGION:
-                setShowSpinner(!(regions.length > 0));
+                setShowSpinner(!(JSON.stringify(regions) !== '{}'));
                 break;
 
             case SearchEnum.SUBREGIONS:
-                setShowSpinner(!(subregions.length > 0));
+                setShowSpinner(!(JSON.stringify(subregions) !== '{}'));
 
                 break;
 
@@ -113,19 +122,15 @@ export default function Home() {
         }
     }
 
-    useEffect(()=>{console.log("ShowSpinner:", showSpinner)}, [showSpinner])
-
     const onSearch = (searchTerm) => {
         clearStates();
         switch (radioValue) {
             case SearchEnum.NAME:
                 console.log("By Name")
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.names(setNames);
                 }
-                else
-                {
+                else {
                     GetAPI.allByName(setNames, searchTerm);
                 }
 
@@ -133,40 +138,33 @@ export default function Home() {
 
             case SearchEnum.CODE:
                 console.log("By Code")
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.codes(setCodes);
                 }
-                else if (searchTerm.includes(",")) 
-                {
+                else if (searchTerm.includes(",")) {
                     GetAPI.allByCodeList(setCodes, searchTerm);
                 }
-                else
-                {
+                else {
                     GetAPI.allByCode(setCodes, searchTerm);
                 }
                 break;
 
             case SearchEnum.CURRENCY:
                 console.log("By Currencies");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.currencies(setCurrencies);
                 }
-                else
-                {
+                else {
                     GetAPI.allByCurrency(setCurrencies, searchTerm);
                 }
                 break;
 
             case SearchEnum.LANGUAGE:
                 console.log("By Languages");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.languages(setLanguages);
                 }
-                else
-                {
+                else {
                     GetAPI.allByLanguages(setLanguages, searchTerm);
                 }
 
@@ -174,12 +172,10 @@ export default function Home() {
 
             case SearchEnum.CAPITAL_CITY:
                 console.log("By Capital");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.capitals(setCapitals);
                 }
-                else
-                {
+                else {
                     GetAPI.allByCapitals(setCapitals, searchTerm);
                 }
 
@@ -187,12 +183,10 @@ export default function Home() {
 
             case SearchEnum.REGION:
                 console.log("By Region");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.regions(setRegions);
                 }
-                else
-                {
+                else {
                     GetAPI.allByRegions(setRegions, searchTerm);
                 }
 
@@ -200,12 +194,10 @@ export default function Home() {
 
             case SearchEnum.SUBREGIONS:
                 console.log("By SubRegion");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.subregions(setSubregions);
                 }
-                else
-                {
+                else {
                     GetAPI.allBySubregions(setSubregions, searchTerm);
                 }
 
@@ -213,12 +205,10 @@ export default function Home() {
 
             case SearchEnum.TRANSLATION:
                 console.log("By Translation");
-                if (!searchTerm) 
-                {
+                if (!searchTerm) {
                     GetAPI.translation(setTranslations);
                 }
-                else
-                {
+                else {
                     GetAPI.allByTranslations(setTranslations, searchTerm);
                 }
 
@@ -237,20 +227,19 @@ export default function Home() {
         onSearch(newSearchTerm);
     };
 
+    const goToCountry = (countryName) => {
+        return navigate(`country-info/${countryName}`);
+    }
+
 
     return (
         <Container style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
 
             {/* Search Bar */}
-            <div className="mb-3" style={{ width: '-webkit-fill-available', marginTop: '3rem' }}>
-                <input
-                    type="text"
-                    placeholder="Search for a country..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="form-control"
-                />
-            </div>
+            <SearchBar
+                searchTerm={searchTerm}
+                handleSearch={handleSearch}
+            />
 
             {/* Search By */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
@@ -277,228 +266,89 @@ export default function Home() {
             <h1 className="mt-5 mb-3">Countries</h1>
             <Row>
                 {names.length > 0 && radioValue == SearchEnum.NAME && names.map((countryName, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${countryName}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
-
-                                <Card.Text>{countryName}</Card.Text>
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <CountryNameCard
+                        key={index}
+                        index={index}
+                        countryName={countryName}
+                        clickHandler={() => goToCountry(countryName)}
+                    />
                 ))}
 
                 {codes.length > 0 && radioValue == SearchEnum.CODE && codes.map((country, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${country.name}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
-
-
-                                <Card.Title>{country.name}</Card.Title>
-                                <Table striped bordered >
-                                    <tbody>
-                                        <tr>
-                                            <td>cca2</td>
-                                            <td>{country.cca2}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ccn3</td>
-                                            <td>{country.ccn3}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>cca3</td>
-                                            <td>{country.cca3}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>cioc</td>
-                                            <td>{country.cioc}</td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <CountryCodeCard
+                        key={index}
+                        index={index}
+                        country={country}
+                        clickHandler={() => goToCountry(country.name)}
+                    />
                 ))}
 
                 {currencies.length > 0 && radioValue == SearchEnum.CURRENCY && currencies.map((country, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${country.name}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
-
-
-                                <Card.Title>{country.name}</Card.Title>
-
-                                <Table striped="columns" responsive variant="dark">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td>Code</td>
-                                            <td>Symbol</td>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-                                        {Object.entries(country.currencies).map(([code, currency]) => (
-                                            <tr key={code}>
-                                                <td>{currency.name}</td>
-                                                <td>{code}</td>
-                                                <td>{currency.symbol}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <CountryCurrencyCard
+                        key={index}
+                        index={index}
+                        country={country}
+                        clickHandler={() => goToCountry(country.name)}
+                    />
                 ))}
 
                 {languages.length > 0 && radioValue == SearchEnum.LANGUAGE && languages.map((country, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${country.name}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
-
-
-                                <Card.Title>{country.name}</Card.Title>
-
-                                <Table striped="columns" responsive variant="dark">
-                                    <thead>
-                                        <tr>
-                                            <td>Code</td>
-                                            <td>Language</td>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-                                        {Object.entries(country.languages).map(([name, lang]) => (
-                                            <tr key={name}>
-                                                <td>{name}</td>
-                                                <td>{lang}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <CountryLanguageCard
+                        key={index}
+                        index={index}
+                        country={country}
+                        clickHandler={() => goToCountry(country.name)}
+                    />
                 ))}
 
 
                 {capitals.length > 0 && radioValue == SearchEnum.CAPITAL_CITY && capitals.map((country, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${country.name}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
-
-
-                                <Card.Title>{country.name}</Card.Title>
-                                {country.capital.length == 1 && <Card.Text>{country.capital[0]}</Card.Text>}
-
-                                {country.capital.length > 1 && <Table striped="columns" responsive variant="dark">
-                                    <thead>
-                                        <tr>
-                                            <td>Capitals</td>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-                                        {country.capital.map((item, index) => (
-                                            <tr key={index}>
-                                                <td>{item}</td>
-                                            </tr>
-                                        ))}
-
-                                    </tbody>
-                                </Table>}
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <CountryCapitalCard
+                        key={index}
+                        index={index}
+                        country={country}
+                        clickHandler={() => goToCountry(country.name)}
+                    />
                 ))}
 
 
-                {regions.length > 0 && radioValue == SearchEnum.REGION && regions.map((country, index) => (
-                    <Col xs={12} sm={6} md={4} lg={3} key={index}
-                        onClick={(e) => { return navigate(`country-info/${country.name}`); }}
-                    >
-                        <Card className="mb-3 grow pointer">
-                            <Card.Body>
+                {JSON.stringify(regions) !== '{}' && radioValue == SearchEnum.REGION && Object.entries(regions).map(([regionName, countryNames], index) => (
+                    <CountryRegionCard
+                        key={index}
+                        regionName={regionName}
+                        countryNames={countryNames}
+                        clickHandler={goToCountry}
+                    />
 
-
-                                <Card.Title>{country.name}</Card.Title>
-                                <Card.Text>{country.region}</Card.Text>
-
-                            </Card.Body>
-                        </Card>
-                    </Col>
                 ))}
 
                 {
-                    (subregions.length > 0 && radioValue === SearchEnum.SUBREGIONS) ? (
-                        subregions.map((country, index) => (
-                            <Col xs={12} sm={6} md={4} lg={3} key={index} onClick={(e) => navigate(`country-info/${country.name}`)}>
-                                <Card className="mb-3 grow pointer">
-                                    <Card.Body>
-                                        <Card.Title>{country.name}</Card.Title>
-                                        <Card.Text>{country.subregion}</Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
+                    JSON.stringify(subregions) !== '{}' && radioValue === SearchEnum.SUBREGIONS && (
+                        Object.entries(subregions).map(([subregionName, countryNames], index) => (
+                            <CountrySubregionCard
+                                key={index}
+                                subregionName={subregionName}
+                                countryNames={countryNames}
+                                clickHandler={goToCountry}
+                            />
                         ))
-                    ) :
-                    <></> 
-                    // subregions.length === 0 && <Spinner animation="grow" variant="primary" />
-                }
-
-
-                {
-                    radioValue === SearchEnum.TRANSLATION && translations.length > 0 ? (
-                        translations.map((country, index) => (
-                            <Col key={index} onClick={(e) => navigate(`country-info/${country.name}`)}>
-                                <Card className="mb-3 grow pointer">
-                                    <Card.Body>
-                                        <Card.Title>{country.name}</Card.Title>
-                                        <Table striped responsive variant="dark">
-                                            <thead>
-                                                <tr>
-                                                    <td>Language</td>
-                                                    <td>Common</td>
-                                                    <td>Official</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {Object.entries(country.translations).map(([language, translation]) => (
-                                                    <tr key={language}>
-                                                        <td>{language}</td>
-                                                        <td>{translation.common}</td>
-                                                        <td>{translation.official}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </Table>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        ))
-                    ) : (
-                        <></>
-                        // setShowSpinner(true)
-                        // translations.length <= 0 && <Spinner animation="grow" variant="primary" />
                     )
                 }
 
-                {showSpinner==true && <Spinner animation="grow" variant="primary" />}
+
+                {
+                    radioValue === SearchEnum.TRANSLATION && translations.length > 0 && (
+                        translations.map((country, index) => (
+                            <CountryTranslationCard
+                                key={index}
+                                country={country}
+                                clickHandler={() => { goToCountry(country.name) }}
+                            />
+                        ))
+                    )
+                }
+
+                {showSpinner == true && <Spinner animation="grow" variant="primary" />}
 
             </Row>
         </Container>
