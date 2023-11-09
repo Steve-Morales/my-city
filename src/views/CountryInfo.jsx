@@ -539,26 +539,26 @@ export default function CountryInfo() {
 
                         <tr>
                             <td colSpan={2} className="text-center">
-                            <span className="fw-bold fs-4">Translations (Common)</span>
+                                <span className="fw-bold fs-4">Translations (Common)</span>
 
-                            <Table striped responsive variant="dark">
-                        <thead>
-                            <tr>
-                                <td>Language</td>
-                                <td>Common</td>
-                                <td>Official</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Object.entries(info.translations).map(([language, translation]) => (
-                                <tr key={language}>
-                                    <td>{language}</td>
-                                    <td>{translation.common}</td>
-                                    <td>{translation.official}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                                <Table striped responsive variant="dark">
+                                    <thead>
+                                        <tr>
+                                            <td>Language</td>
+                                            <td>Common</td>
+                                            <td>Official</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {Object.entries(info.translations).map(([language, translation]) => (
+                                            <tr key={language}>
+                                                <td>{language}</td>
+                                                <td>{translation.common}</td>
+                                                <td>{translation.official}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </td>
                         </tr>
 
